@@ -24,6 +24,8 @@ import mindustry.world.blocks.environment.*;
 import mindustry.world.blocks.storage.CoreBlock.*;
 import mindustry.world.modules.*;
 
+import mindustry.usurv.building.UpdateCoreItems;
+
 import java.util.*;
 
 import static mindustry.Vars.*;
@@ -388,6 +390,7 @@ public class ConstructBlock extends Block{
         }
 
         private float checkRequired(ItemModule inventory, float amount, boolean remove){
+
             float maxProgress = amount;
             boolean infinite = team.rules().infiniteResources || state.rules.infiniteResources;
 
@@ -405,18 +408,40 @@ public class ConstructBlock extends Block{
                 }else if(required > 0){ //if this amount is positive...
                     //calculate how many items it can actually use
                     int maxUse = Math.min(required, inventory.get(current.requirements[i].item));
-                    //get this as a fraction
-                    float fraction = maxUse / (float)required;
 
-                    //move max progress down if this fraction is less than 1
-                    maxProgress = Math.min(maxProgress, maxProgress * fraction);
+                    //get player,units and builder unit for consume method
 
-                    accumulator[i] -= maxUse;
+                    Player plyr = Groups.player.find(p -> p.team() == this.team);
 
-                    //remove stuff that is actually used
-                    if(remove && !infinite){
-                        inventory.remove(current.requirements[i].item, maxUse);
-                        itemsLeft[i] -= maxUse;
+                    Seq<Unit> bunits = new Seq<>();
+
+                    for (Unit u : Groups.unit) {
+                        float x = u.x;
+                        float y = u.y;
+                        float bx = this.x;
+                        float by = this.y;
+                        float dx = x - bx;
+                        float dy = y - by;
+                        float distToUnit = (float) Math.sqrt(dx * dx + dy * dy);
+                        if (distToUnit < Vars.buildingRange && u.buildPlan().build() == this) {
+                            bunits.add(u);
+                        }
+                    }
+
+                    if (UpdateCoreItems.consume(plyr,bunits,lastBuilder,current.requirements[i].item, maxUse, remove)) {
+
+                        //get this as a fraction
+                        float fraction = maxUse / (float)required;
+
+                        //move max progress down if this fraction is less than 1
+                        maxProgress = Math.min(maxProgress, maxProgress * fraction);
+
+                        accumulator[i] -= maxUse;
+
+                        //remove stuff that is actually used
+                        if(remove && !infinite){
+                            itemsLeft[i] -= maxUse;
+                        }
                     }
                 }
                 //else, no items are required yet, so just keep going
