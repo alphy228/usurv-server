@@ -1,4 +1,4 @@
-package mindustry.usurv.Usurv;
+package mindustry.usurv;
 
 import java.lang.Math;
 import java.lang.Runnable;
