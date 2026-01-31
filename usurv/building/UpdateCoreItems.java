@@ -1,4 +1,4 @@
-package mindustry.usurv.building.UpdateCoreItems;
+package mindustry.usurv.building;
 
 import arc.util.Timer;
 import java.util.HashMap;
