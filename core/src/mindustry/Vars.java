@@ -300,6 +300,8 @@ public class Vars implements Loadable{
     public static void init(){
         Groups.init();
 
+        mindustry.usurv.Usurv.init();
+
         if(loadLocales){
             //load locales
             String[] stra = Core.files.internal("locales").readString().split("\n");
