@@ -301,7 +301,8 @@ public class Vars implements Loadable{
     public static void init(){
         Groups.init();
 
-        Usurv.init();
+        Usurv usurv = new Usurv();
+        usurv.init();
 
         if(loadLocales){
             //load locales
