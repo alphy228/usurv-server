@@ -107,7 +107,6 @@ public class Usurv {
         Vars.state.rules.fog=true;
         Vars.state.rules.unitCap=3;
         Vars.state.rules.unitCapVariable=false;
-<<<<<<< HEAD
         Vars.state.rules.buildSpeedMultiplier=0.5f;
         Blocks.coreShard.health=2000000000;
         UnitTypes.alpha.health=0;
@@ -115,16 +114,6 @@ public class Usurv {
         //set client side rules
 
         //set server side rules
-=======
-        Blocks.coreShard.health=999999;
-        UnitTypes.alpha.health=0;
-        
-        //set client side rules
-        clientrules.buildSpeedMultiplier=0.5f;
-        Call.setRules(clientrules);
-        //set server side rules
-        Vars.state.rules.buildSpeedMultiplier=0f;
->>>>>>> origin/master
     }
 
 
@@ -271,16 +260,7 @@ public class Usurv {
                     wrecks.add(wreck);
                 }
             }
-<<<<<<< HEAD
         });   
-=======
-        });
-
-        //add a chat filter that changes the contents of all messages
-        //in this case, all instances of "heck" are censored
-        Vars.netServer.admins.addChatFilter((player, text) -> text.replace("heck", "h*ck"));
-        
->>>>>>> origin/master
     }
 
     //array with all wrecks
@@ -313,11 +293,7 @@ public class Usurv {
         });
     }
 
-<<<<<<< HEAD
     //register commands that player can invoke in-gameg
-=======
-    //register commands that player can invoke in-game
->>>>>>> origin/master
     public void registerClientCommands(CommandHandler handler){
 
         //register a simple reply command

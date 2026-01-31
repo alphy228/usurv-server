@@ -96,11 +96,7 @@ public class UpdateCoreItems implements Runnable {
       }
     });
   }
-<<<<<<< HEAD
   public static boolean consume(Player player,Seq<Unit> units,Unit builderunit ,Item item, Integer amount, boolean remove){
-=======
-  public static boolean Consume(Player player,Seq<Unit> units,Unit builderunit ,Item item, Integer amount){
->>>>>>> origin/master
     try {
       if (consumableItems.containsKey(item)){
         if (!(consumableItems.get(item) == null)) {
@@ -137,13 +133,9 @@ public class UpdateCoreItems implements Runnable {
                     keepAmount = 0;
                     amount2 = amount2-unit2ItemAmount;
                   }
-<<<<<<< HEAD
                   if (remove) {
                     unit2.stack.amount=keepAmount;
                   }
-=======
-                  unit2.stack.amount=keepAmount;
->>>>>>> origin/master
                 }
               }
             }
@@ -176,25 +168,17 @@ public class UpdateCoreItems implements Runnable {
                         keepAmount = 0;
                         amount2 = amount2-itemAmount;
                       }
-<<<<<<< HEAD
                       if (remove) {
                       Call.setItem(building, itemType, keepAmount);
                       }
-=======
-                      Call.setItem(building, itemType, keepAmount);
->>>>>>> origin/master
                     }
                   }
                 }
               }
             }
-<<<<<<< HEAD
             if (remove) {
               ActuallyUpdateTheItems(consumableItems, player);
             }
-=======
-            ActuallyUpdateTheItems(consumableItems, player);
->>>>>>> origin/master
             return true;
           } else {
             return false;
