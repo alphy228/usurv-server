@@ -27,11 +27,8 @@ import mindustry.net.Packets.*;
 import mindustry.net.*;
 import mindustry.type.*;
 
-<<<<<<< HEAD
 import mindustry.usurv.patches.UsurvPatch;
 
-=======
->>>>>>> origin/master
 import java.io.*;
 import java.net.*;
 import java.time.*;
@@ -348,11 +345,8 @@ public class ServerControl implements ApplicationListener{
             }
         }
 
-<<<<<<< HEAD
         contentPatches.add(Jval.read(UsurvPatch.patch).toString(Jformat.plain));
 
-=======
->>>>>>> origin/master
         if(contentPatches.size > 0){
             Log.info("Loaded @ content patch files.", contentPatches.size);
         }
