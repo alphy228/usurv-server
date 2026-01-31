@@ -26,10 +26,9 @@ import mindustry.content.Blocks;
 import mindustry.ui.Menus;
 import mindustry.world.modules.*;
 
-import usurv.building.*;
-import usurv.player.*;
-import usurv.special.*;
-import usurv.ai.*;
+import mindustry.usurv.building.*;
+import mindustry.usurv.player.*;
+import mindustry.usurv.special.*;
 
 import mindustry.world.meta.*; 
 
