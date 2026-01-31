@@ -31,6 +31,7 @@ import mindustry.service.*;
 import mindustry.ui.dialogs.*;
 import mindustry.world.*;
 import mindustry.world.meta.*;
+import mindustry.usurv.Usurv;
 
 import java.io.*;
 import java.nio.charset.*;
@@ -300,7 +301,7 @@ public class Vars implements Loadable{
     public static void init(){
         Groups.init();
 
-        mindustry.usurv.Usurv.init();
+        Usurv.init();
 
         if(loadLocales){
             //load locales
