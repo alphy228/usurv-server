@@ -33,7 +33,7 @@ import usurv.ai.*;
 
 import mindustry.world.meta.*; 
 
-public class usurvplugin extends Plugin{
+public class Usurv extends Plugin{
     //player data
     public static HashMap<String, Tile> playerTile = new HashMap<>();
     public static HashMap<String, Team> playerTeam = new HashMap<>();
