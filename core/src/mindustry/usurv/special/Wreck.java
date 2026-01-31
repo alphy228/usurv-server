@@ -42,6 +42,20 @@ public class Wreck {
     this.items = new ItemModule();
     this.block = block;
     this.items.set(setitems);
+<<<<<<< HEAD
+    if (tile.block() == Blocks.air) {
+      if (block == null) {
+        this.tile.setNet(Blocks.radar,Team.derelict,0);
+        this.tile.build.health = type.health*6;
+      } else {
+        this.tile.setNet(block,Team.derelict,0);
+        this.tile.build.health = block.health*6;
+      }
+      if (!(this.tile.build.items == null)) {
+        this.tile.build.items.set(setitems);
+      }
+    }
+=======
     if (block == null) {
       this.tile.setNet(Blocks.radar,Team.derelict,0);
       this.tile.build.health = type.health*6;
@@ -50,11 +64,16 @@ public class Wreck {
       this.tile.build.health = block.health*6;
     }
     this.tile.build.items.set(setitems);
+>>>>>>> origin/master
   }
   
   public void updateWreck() {
     
+<<<<<<< HEAD
+    if ((this.tile.block()!=this.block && this.tile.block()!=Blocks.radar) || ((!(this.tile.build.items == null)) && this.tile.build.items.length() == 0)) {
+=======
     if ((this.tile.block()!=this.block && this.tile.block()!=Blocks.radar) || this.tile.build.items.length() == 0) {
+>>>>>>> origin/master
       Usurv.wrecks.remove(this);
       return;
     }
