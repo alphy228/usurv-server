@@ -265,52 +265,52 @@ public class Logic implements ApplicationListener{
     }
 
     private void checkGameState(){
-        //campaign maps do not have a 'win' state!
-        if(state.isCampaign()){
+        //campaign maps do not have a 'win' state! and usurv maps call game over with their own logic
+        //if(false){
             //gameover only when cores are dead
-            if(state.teams.playerCores().size == 0 && !state.gameOver){
-                state.gameOver = true;
-                Events.fire(new GameOverEvent(state.rules.waveTeam));
-            }
+            //if(state.teams.playerCores().size == 0 && !state.gameOver){
+                //state.gameOver = true;
+                //Events.fire(new GameOverEvent(state.rules.waveTeam));
+            //}
 
             //check if there are no enemy spawns
-            if(state.rules.waves && spawner.countSpawns() + state.teams.cores(state.rules.waveTeam).size <= 0){
+            //if(state.rules.waves && spawner.countSpawns() + state.teams.cores(state.rules.waveTeam).size <= 0){
                 //if yes, waves get disabled
-                state.rules.waves = false;
-            }
+                //state.rules.waves = false;
+            //}
 
             //if there's a "win" wave and no enemies are present, win automatically
-            if(state.rules.waves && (state.enemies == 0 && state.rules.winWave > 0 && state.wave >= state.rules.winWave && !spawner.isSpawning()) ||
-                (state.rules.attackMode && !state.rules.waveTeam.isAlive())){
+            //if(state.rules.waves && (state.enemies == 0 && state.rules.winWave > 0 && state.wave >= state.rules.winWave && !spawner.isSpawning()) ||
+                //(state.rules.attackMode && !state.rules.waveTeam.isAlive())){
 
-                if(state.rules.sector.preset != null && state.rules.sector.preset.attackAfterWaves && !state.rules.attackMode){
+                //if(state.rules.sector.preset != null && state.rules.sector.preset.attackAfterWaves && !state.rules.attackMode){
                     //activate attack mode to destroy cores after waves are done.
-                    state.rules.attackMode = true;
-                    state.rules.waves = false;
-                    Call.setRules(state.rules);
-                }else{
-                    Call.sectorCapture();
-                }
-            }
-        }else{
-            if(!state.rules.attackMode && state.teams.playerCores().size == 0 && !state.gameOver){
-                state.gameOver = true;
-                Events.fire(new GameOverEvent(state.rules.waveTeam));
-            }else if(state.rules.attackMode){
-                //count # of teams alive
-                int countAlive = state.teams.getActive().count(t -> t.isAlive() && t.team != Team.derelict);
-
-                if((countAlive <= 1 || (!state.rules.pvp && state.rules.defaultTeam.core() == null)) && !state.gameOver){
-                    //find team that won
-                    TeamData left = state.teams.getActive().find(t -> t.isAlive() && t.team != Team.derelict);
-                    Events.fire(new GameOverEvent(left == null ? Team.derelict : left.team));
-                    state.gameOver = true;
-                }
-            }else if(!state.gameOver && state.rules.waves && (state.enemies == 0 && state.rules.winWave > 0 && state.wave >= state.rules.winWave && !spawner.isSpawning())){
-                state.gameOver = true;
-                Events.fire(new GameOverEvent(state.rules.defaultTeam));
-            }
-        }
+                    //state.rules.attackMode = true;
+                    //state.rules.waves = false;
+                    //Call.setRules(state.rules);
+                //}else{
+                    //Call.sectorCapture();
+                //}
+           // }
+        //}else if (false) {
+      //      if(!state.rules.attackMode && state.teams.playerCores().size == 0 && !state.gameOver){
+      //          state.gameOver = true;
+      //          Events.fire(new GameOverEvent(state.rules.waveTeam));
+      //      }else if(state.rules.attackMode){
+      //          //count # of teams alive
+      //          int countAlive = state.teams.getActive().count(t -> t.isAlive() && t.team != Team.derelict);
+//
+      //          if((countAlive <= 1 || (!state.rules.pvp && state.rules.defaultTeam.core() == null)) && !state.gameOver){
+      //              //find team that won
+      //              TeamData left = state.teams.getActive().find(t -> t.isAlive() && t.team != Team.derelict);
+      //              Events.fire(new GameOverEvent(left == null ? Team.derelict : left.team));
+      //              state.gameOver = true;
+      //          }
+      //      }else if(!state.gameOver && state.rules.waves && (state.enemies == 0 && state.rules.winWave > 0 && state.wave >= state.rules.winWave && !spawner.isSpawning())){
+      //          state.gameOver = true;
+      //          Events.fire(new GameOverEvent(state.rules.defaultTeam));
+      //      }
+      //  }
     }
 
     protected void updateWeather(){

@@ -30,7 +30,10 @@ buildscript{
 plugins{
     id "org.jetbrains.kotlin.jvm" version "2.1.10"
     id "org.jetbrains.kotlin.kapt" version "2.1.10"
+    id "idea"
 }
+
+
 
 allprojects{
     apply plugin: 'maven-publish'
@@ -489,6 +492,22 @@ task resolveDependencies{
         rootProject.allprojects{ project ->
             Set<Configuration> configurations = project.buildscript.configurations + project.configurations
             configurations.findAll{c -> c.canBeResolved}.forEach{c -> c.resolve()}
+        }
+    }
+}
+
+idea {
+    module {
+        generatedSourceDirs += file('core/build/generated/source/kapt/main')
+    }
+}
+
+allprojects {
+    apply plugin: 'idea'
+    idea {
+        module {
+            // This forces the IDE to look at the Gradle-standard generation path
+            generatedSourceDirs += file('build/generated/source/kapt/main')
         }
     }
 }

@@ -6,6 +6,7 @@ import java.lang.Math;
 import java.lang.Runnable;
 import arc.util.Timer;
 import arc.util.Timer.Task;
+
 import java.util.HashMap;
 import java.util.Random;
 import arc.*;
@@ -27,6 +28,8 @@ import mindustry.net.Administration.*;
 import mindustry.content.Blocks;
 import mindustry.ui.Menus;
 import mindustry.world.modules.*;
+import mindustry.game.EventType;
+import mindustry.logic.LExecutor;
 
 import mindustry.usurv.building.*;
 import mindustry.usurv.player.*;
@@ -35,6 +38,7 @@ import mindustry.usurv.special.*;
 import mindustry.world.meta.*; 
 
 public class Usurv {
+    private static int tick = 0;
     //player data
     public static HashMap<String, Tile> playerTile = new HashMap<>();
     public static HashMap<String, Team> playerTeam = new HashMap<>();
@@ -74,8 +78,9 @@ public class Usurv {
                     dist = Math.sqrt((float)((ux-x)*(ux-x)+(uy-y)*(uy-y)));
                     mindist = Math.min(mindist,dist);  
                 }
+                int distFromCenter = (int)Math.round(Math.hypot(x-Vars.world.width()/2,y-Vars.world.height()/2));
                 //Log.info("checking tile " + x + " ," + y + " ,mindist/maxdist = " + mindist + "/" + maxdist);
-                if ((mindist>maxdist) && (Vars.world.tile(x,y).block() == Blocks.air) && (Vars.world.tile(x,y).floor().drownTime == 0f)) {
+                if ((mindist>maxdist) && (Vars.world.tile(x,y).block() == Blocks.air) && (Vars.world.tile(x,y).floor().drownTime == 0f) && (distFromCenter/8<(Vars.world.width()/4+Vars.world.height()/4))) {
                     spawntile = Vars.world.tile(x,y);
                     //Log.info("setting tile " + x + " ," + y + " as spawn tile");
                     maxdist = mindist;
@@ -90,32 +95,44 @@ public class Usurv {
 
     //create rules for clients
     private static void updateRules(){
-        Rules clientrules = Vars.state.rules;
+        Timer timer = new Timer();
+        timer.schedule(() -> {
+            Rules clientrules = Vars.state.rules;
 
-        //ai target change stuff
-        Blocks.coreShard.flags = EnumSet.of(BlockFlag.drill);
-        Blocks.vault.flags = EnumSet.of(BlockFlag.core);
-        Blocks.container.flags = EnumSet.of(BlockFlag.core);
-        
-        //set general rules
-        Blocks.vault.update=true;
-        Blocks.container.update=true;
-        Vars.state.rules.waves=false;
-        Vars.state.rules.attackMode=false;
-        Vars.state.rules.pvpAutoPause=false;
-        Vars.state.rules.pvp=true;
-        Vars.state.rules.canGameOver=false;
-        Vars.state.rules.randomWaveAI=true;
-        Vars.state.rules.fog=true;
-        Vars.state.rules.unitCap=3;
-        Vars.state.rules.unitCapVariable=false;
-        Vars.state.rules.buildSpeedMultiplier=0.5f;
-        Blocks.coreShard.health=2000000000;
-        UnitTypes.alpha.health=0;
-        
-        //set client side rules
+            //ai target change stuff
+            Blocks.coreShard.flags = EnumSet.of(BlockFlag.drill);
+            Blocks.vault.flags = EnumSet.of(BlockFlag.core);
+            Blocks.container.flags = EnumSet.of(BlockFlag.core);
+            
+            //set general rules
+            Blocks.vault.update=true;
+            Blocks.container.update=true;
+            Vars.state.rules.waves=false;
+            Vars.state.rules.attackMode=false;
+            Vars.state.rules.pvpAutoPause=false;
+            Vars.state.rules.pvp=true;
+            Vars.state.rules.canGameOver=false;
+            Vars.state.rules.randomWaveAI=true;
+            Vars.state.rules.fog=true;
+            Vars.state.rules.unitCap=3;
+            Vars.state.rules.unitCapVariable=false;
+            Vars.state.rules.buildSpeedMultiplier=0.5f;
+            Blocks.coreShard.health=2000000000;
+            UnitTypes.alpha.health=0;
+            LExecutor.setMapArea(0,100,999999,999999);
+            Vars.state.rules.bannedBlocks.add(Blocks.plastaniumCompressor);
+            Vars.state.rules.bannedBlocks.add(Blocks.phaseWeaver);
+            Vars.state.rules.bannedBlocks.add(Blocks.surgeCrucible);
 
-        //set server side rules
+            Vars.state.rules.blockDamageMultiplier = 0.33;
+
+            
+            //set client side rules
+
+            Call.setRules(Vars.state.rules);
+            //set server side rules
+
+        }, 5);
     }
 
 
@@ -216,39 +233,55 @@ public class Usurv {
             playerLastUnit.put(uuid,player.unit());
         });
 
+        Events.run(EventType.Trigger.update, () -> {
+            tick++;
+            if (tick%30==0) {
+                unitItems.clear();
+                for (Unit u : Groups.unit) {
+                    unitItems.put(u, new ItemStack(u.stack.item, u.stack.amount));
+                }
+            }
+        });
+
+
         //create unit wrecks
         Events.on(UnitDestroyEvent.class, event -> {
             Unit unit = event.unit;
             ItemModule items = new ItemModule();
-            Tile wreckTile = null;
-            int wx = Math.round(unit.x/8);
-            int wy = Math.round(unit.y/8);
-            int attem = 0;
-            while ((wreckTile == null)) {
-                attem = attem+1;
-                if (attem==2) return;
-                for(int r = 0; r<20; r++) {
-                    for(int dx = -r; dx <= r; dx++) {
-                        for(int dy = -r; dy <= r; dy++) {
-                            if(Math.abs(dx) != r && Math.abs(dy) != r) continue;
-                            Tile t = Vars.world.tile(wx + dx, wy + dy);
-                            if(t != null) {
-                                if (t.block() == Blocks.air) {
-                                    wx = t.x;
-                                    wy = t.y;
-                                    wreckTile = t;
-                                    dx = 99999;
-                                    dy = 99999;
-                                    r = 99999;
+            ItemStack uItems = unitItems.get(unit);
+            if (!(uItems == null)) {
+                items.add(uItems.item, uItems.amount);
+                if (items.total() > 0) {
+                    Tile wreckTile = null;
+                    int wx = Math.round(unit.x/8);
+                    int wy = Math.round(unit.y/8);
+                    int attem = 0;
+                    while ((wreckTile == null)) {
+                        attem = attem+1;
+                        if (attem==2) return;
+                        for(int r = 0; r<20; r++) {
+                            for(int dx = -r; dx <= r; dx++) {
+                                for(int dy = -r; dy <= r; dy++) {
+                                    if(Math.abs(dx) != r && Math.abs(dy) != r) continue;
+                                    Tile t = Vars.world.tile(wx + dx, wy + dy);
+                                    if(t != null) {
+                                        if (t.block() == Blocks.air) {
+                                            wx = t.x;
+                                            wy = t.y;
+                                            wreckTile = t;
+                                            dx = 99999;
+                                            dy = 99999;
+                                            r = 99999;
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
+                    Wreck wreck = new Wreck(wreckTile,unit.type,null,items);
+                    wrecks.add(wreck);
                 }
             }
-            items.add(unit.stack.item, unit.stack.amount);
-            Wreck wreck = new Wreck(wreckTile,unit.type,null,items);
-            wrecks.add(wreck);
         });
 
         //create container/vault wrecks
@@ -257,7 +290,7 @@ public class Usurv {
             Block block = tile.block();
             Building build = tile.build;
             if (block == Blocks.container || block == Blocks.vault) {
-                if (build.team != Team.derelict) {
+                if (build.team != Team.derelict && build.items.total() > 0) {
                     Wreck wreck = new Wreck(tile,null,block,build.items);
                     wrecks.add(wreck);
                 }
@@ -267,6 +300,8 @@ public class Usurv {
 
     //array with all wrecks
     public static Seq<Wreck> wrecks = new Seq<>();
+
+    public static HashMap<Unit, ItemStack> unitItems = new HashMap<>();
 
     //update wrecks
     public class UpdateWrecks implements Runnable {

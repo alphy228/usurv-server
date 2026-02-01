@@ -11,7 +11,6 @@ import arc.util.*;
 import arc.struct.*;
 import mindustry.*;
 import mindustry.type.*;
-import mindustry.world.Tile;
 import mindustry.world.modules.*;
 import mindustry.Vars;
 import mindustry.game.Rules;
@@ -51,7 +50,9 @@ public class Wreck {
         this.tile.build.health = block.health*6;
       }
       if (!(this.tile.build.items == null)) {
-        this.tile.build.items.set(setitems);
+        for (Item i : Vars.content.items()) {
+            Call.setItem(this.tile.build, i, this.items.get(i));
+        }
       }
     }
   }

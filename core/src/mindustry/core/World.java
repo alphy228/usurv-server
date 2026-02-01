@@ -383,7 +383,8 @@ public class World{
                 }
             }
         }else{
-            invalidMap = !state.teams.getActive().contains(TeamData::hasCore);
+            //invalidMap = !state.teams.getActive().contains(TeamData::hasCore);
+            invalidMap = false;
 
             if(invalidMap){
                 throw new MapException(map, "Map has no cores!");
