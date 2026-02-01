@@ -423,7 +423,7 @@ public class ConstructBlock extends Block{
                         float dx = x - bx;
                         float dy = y - by;
                         float distToUnit = (float) Math.sqrt(dx * dx + dy * dy);
-                        if (distToUnit < Vars.buildingRange && u.buildPlan().build() == this) {
+                        if (distToUnit < Vars.buildingRange && (!(u.buildPlan() == null)) && u.buildPlan().build() == this) {
                             bunits.add(u);
                         }
                     }

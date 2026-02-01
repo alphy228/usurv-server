@@ -9,6 +9,8 @@ import mindustry.gen.*;
 import mindustry.world.*;
 import mindustry.world.blocks.ConstructBlock.*;
 
+import mindustry.usurv.logic.Ai;
+
 import static mindustry.Vars.*;
 
 public class BuilderAI extends AIController{
@@ -87,7 +89,7 @@ public class BuilderAI extends AIController{
             if((retreatTimer += Time.delta) >= retreatDelay || alwaysFlee){
                 if(enemy != null){
                     unit.clearBuilding();
-                    var core = unit.closestCore();
+                    var core = Ai.closestTarget(unit, false);
                     if(core != null && !unit.within(core, retreatDst)){
                         moveTo(core, retreatDst);
                         moving = true;

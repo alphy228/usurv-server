@@ -12,6 +12,8 @@ import mindustry.world.blocks.liquid.*;
 import mindustry.world.blocks.storage.*;
 import mindustry.world.meta.*;
 
+import mindustry.usurv.logic.Ai;
+
 import static mindustry.Vars.*;
 
 public class SuicideAI extends GroundAI{
@@ -27,7 +29,7 @@ public class SuicideAI extends GroundAI{
             target = target(unit.x, unit.y, unit.range(), unit.type.targetAir, unit.type.targetGround);
         }
 
-        Building core = unit.closestEnemyCore();
+        Teamc core = Ai.closestTarget(unit, true);
 
         boolean rotate = false, shoot = false, moveToTarget = false;
 

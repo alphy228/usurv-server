@@ -9,15 +9,17 @@ import mindustry.entities.units.*;
 import mindustry.gen.*;
 import mindustry.world.*;
 
+import mindustry.usurv.logic.Ai;
+
 import static mindustry.Vars.*;
 
 public class HugAI extends AIController{
 
     @Override
     public void updateMovement(){
-        Building core = unit.closestEnemyCore();
+        Teamc core = Ai.closestTarget(unit, true);
 
-        if(core != null && unit.within(core, unit.range() / 1.1f + core.block.size * tilesize / 2f)){
+        if(core != null && unit.within(core, unit.range() / 1.6f)) {
             target = core;
             for(var mount : unit.mounts){
                 if(mount.weapon.controllable && mount.weapon.bullet.collidesGround){

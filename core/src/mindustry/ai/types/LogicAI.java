@@ -9,6 +9,8 @@ import mindustry.gen.*;
 import mindustry.logic.*;
 import mindustry.world.*;
 
+import mindustry.usurv.logic.Ai;
+
 import static mindustry.Vars.*;
 
 public class LogicAI extends AIController{
@@ -80,7 +82,7 @@ public class LogicAI extends AIController{
                 }
             }
             case autoPathfind -> {
-                Building core = unit.closestEnemyCore();
+                Teamc core = Ai.closestTarget(unit, true);
 
                 if((core == null || !unit.within(core, unit.range() * 0.5f))){
                     boolean move = true;

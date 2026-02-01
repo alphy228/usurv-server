@@ -13,6 +13,8 @@ import mindustry.world.*;
 import mindustry.world.blocks.payloads.*;
 import mindustry.world.meta.*;
 
+import mindustry.usurv.logic.Ai;
+
 import static mindustry.Vars.*;
 
 public class CommandAI extends AIController{

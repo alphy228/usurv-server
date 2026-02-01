@@ -6,6 +6,8 @@ import mindustry.gen.*;
 import mindustry.type.*;
 import mindustry.world.*;
 
+import mindustry.usurv.logic.Ai;
+
 import static mindustry.Vars.*;
 
 public class MinerAI extends AIController{
@@ -23,7 +25,7 @@ public class MinerAI extends AIController{
 
     @Override
     public void updateMovement(){
-        Building core = unit.closestCore();
+        Building core = Ai.closestStorage(unit, false);
 
         if(!unit.canMine() || core == null) return;
 

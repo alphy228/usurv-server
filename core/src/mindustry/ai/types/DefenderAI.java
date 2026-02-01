@@ -5,6 +5,8 @@ import mindustry.entities.*;
 import mindustry.entities.units.*;
 import mindustry.gen.*;
 
+import mindustry.usurv.logic.Ai;
+
 import static mindustry.Vars.*;
 
 public class DefenderAI extends AIController{
@@ -33,12 +35,12 @@ public class DefenderAI extends AIController{
         if(result != null) return result;
 
         //return core if found
-        var core = unit.closestCore();
+        var core = Ai.closestTarget(unit, false);
         if(core != null) return core;
 
         //for enemies, target the enemy core.
         if(state.rules.waves && unit.team == state.rules.waveTeam){
-            return unit.closestEnemyCore();
+            return Ai.closestTarget(unit, true);
         }
 
         return null;

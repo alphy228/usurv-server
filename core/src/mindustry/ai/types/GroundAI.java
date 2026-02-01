@@ -9,6 +9,8 @@ import mindustry.entities.units.*;
 import mindustry.gen.*;
 import mindustry.world.*;
 
+import mindustry.usurv.logic.Ai;
+
 import static mindustry.Vars.*;
 
 public class GroundAI extends AIController{
@@ -23,10 +25,10 @@ public class GroundAI extends AIController{
         //if it hasn't moved the stuck range in twice the time it should have taken, it's stuck
         float stuckThreshold = Math.max(1f, stuckRange * 2f / unit.type.speed);
 
-        Building core = unit.closestEnemyCore();
+        Teamc core = Ai.closestTarget(unit, true);
         boolean moved = false;
 
-        if(core != null && unit.within(core, unit.range() / 1.3f + core.block.size * tilesize / 2f)){
+        if(core != null && unit.within(core, unit.range() / 1.8f)) {
             target = core;
             for(var mount : unit.mounts){
                 if(mount.weapon.controllable && mount.weapon.bullet.collidesGround){

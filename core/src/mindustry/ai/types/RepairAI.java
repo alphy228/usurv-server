@@ -6,6 +6,8 @@ import mindustry.entities.units.*;
 import mindustry.gen.*;
 import mindustry.world.blocks.ConstructBlock.*;
 
+import mindustry.usurv.logic.Ai;
+
 public class RepairAI extends AIController{
     public static float retreatDst = 160f, fleeRange = 310f, retreatDelay = Time.toSeconds * 3f;
 
@@ -49,7 +51,7 @@ public class RepairAI extends AIController{
             if((retreatTimer += Time.delta) >= retreatDelay){
                 //fly away from enemy when not doing anything
                 if(avoid != null){
-                    var core = unit.closestCore();
+                    var core = Ai.closestStorage(unit, false);
                     if(core != null && !unit.within(core, retreatDst)){
                         moveTo(core, retreatDst);
                     }

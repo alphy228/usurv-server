@@ -10,7 +10,7 @@ import static mindustry.world.meta.BlockFlag.*;
 
 public class FlyingAI extends AIController{
     final static Rand rand = new Rand();
-    final static BlockFlag[] randomTargets = {core, storage, generator, launchPad, factory, repair, battery, reactor, drill};
+    final static BlockFlag[] randomTargets = {storage, generator, launchPad, factory, repair, battery, reactor, drill};
 
     @Override
     public void updateMovement(){
