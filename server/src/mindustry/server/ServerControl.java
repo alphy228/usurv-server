@@ -389,7 +389,7 @@ public class ServerControl implements ApplicationListener{
             info("Stopped server.");
         });
 
-        handler.register("wprocSyncedCode","[code]", "Runs wproc code for everyone", arg -> {
+        handler.register("wprocSyncedCode","<code...>", "Runs wproc code for everyone", arg -> {
             Vars.usurv.addWprocSyncCode(arg[0]);
         });
 

@@ -46,6 +46,8 @@ public class Usurv {
     public static HashMap<String, Player> playerByUUID = new HashMap<>();
     public static HashMap<String, Unit> playerLastUnit = new HashMap<>();
 
+    public static Rules clientrules;
+
     public WprocSync wprocSync = new WprocSync();
 
     public void addWprocSyncCode(String code) {
@@ -100,10 +102,8 @@ public class Usurv {
                             
     });
 
-    //create rules for clients
     private static void updateRules(){
         Timer.schedule(() -> {
-            Rules clientrules = Vars.state.rules;
 
             //ai target change stuff
             Blocks.coreShard.flags = EnumSet.of(BlockFlag.drill);
@@ -129,14 +129,14 @@ public class Usurv {
             Vars.state.rules.bannedBlocks.add(Blocks.plastaniumCompressor);
             Vars.state.rules.bannedBlocks.add(Blocks.phaseWeaver);
             Vars.state.rules.bannedBlocks.add(Blocks.surgeCrucible);
+            Vars.state.rules.bannedBlocks.add(Blocks.worldProcessor);
 
             Vars.state.rules.blockDamageMultiplier = 0.33f;
 
             
             //set client side rules
-
-            Call.setRules(Vars.state.rules);
-            //set server side rules
+            clientrules = Vars.state.rules.copy();
+            clientrules.allowEditWorldProcessors=true;
 
         }, 5);
     }
@@ -163,34 +163,33 @@ public class Usurv {
 
             wprocSync.init();
             
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Log.info("what the fuck interrupted exception in usurvplugin.java?!?");
-            }
-            //start timers
-            Timer timer = new Timer();
-            UpdateCoreItems updatecoreitems = new UpdateCoreItems();
-            PlayerUpdate playerUpdate = new PlayerUpdate();
-            UpdateWrecks updateWrecks = new UpdateWrecks();
-            //no scheduleatfixedrate because bugs
-            timer.schedule(updatecoreitems, 10f, 0.2f);
-            timer.schedule(playerUpdate, 10f, 0.1f);
-            timer.schedule(updateWrecks, 10f, 1f);
-            //update rules
-            updateRules();
-            //reset player data
-            playerTile.clear();
-            playerTeam.clear();
-            playerByUUID.clear();
-            playerLastUnit.clear();
+            Timer.schedule(() -> {
+                //load rules
+                updateRules();
+                Timer.schedule(() -> {if (!(clientrules == null)){Call.setRules(clientrules);}},5, 1);
+
+                //start timers
+                Timer timer = new Timer();
+                UpdateCoreItems updatecoreitems = new UpdateCoreItems();
+                PlayerUpdate playerUpdate = new PlayerUpdate();
+                UpdateWrecks updateWrecks = new UpdateWrecks();
+                //no scheduleatfixedrate because bugs
+                timer.schedule(updatecoreitems, 10f, 0.2f);
+                timer.schedule(playerUpdate, 10f, 0.1f);
+                timer.schedule(updateWrecks, 10f, 1f);
+                //update rules
+                updateRules();
+                //reset player data
+                playerTile.clear();
+                playerTeam.clear();
+                playerByUUID.clear();
+                playerLastUnit.clear();
+            }, 5);
         });
         //generate player core and team
         Events.on(PlayerJoin.class, event -> {
             Player player = event.player;
             String uuid = player.uuid();
-            //send clientside rules
-            updateRules();
 
             int playerUCount = 0;
 

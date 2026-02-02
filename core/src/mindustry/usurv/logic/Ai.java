@@ -45,7 +45,7 @@ public class Ai {
     public static Teamc closestTarget(Unit u, Boolean enemy) {
         StorageBlock.StorageBuild cs = closestStorage(u, enemy);
         Unit cu = closestUnit(u, enemy);
-        if (Math.hypot(u.x-cu.x,u.y-cu.y)>Math.hypot(u.x-cs.x,u.y-cs.y)) {
+        if ((!(cu==null)) && (!(cs==null)) && Math.hypot(u.x-cu.x,u.y-cu.y)>Math.hypot(u.x-cs.x,u.y-cs.y)) {
             return cu;
         } else {
             return cs;
