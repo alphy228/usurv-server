@@ -34,6 +34,7 @@ import mindustry.logic.LExecutor;
 import mindustry.usurv.building.*;
 import mindustry.usurv.player.*;
 import mindustry.usurv.special.*;
+import mindustry.usurv.WprocSync;
 
 import mindustry.world.meta.*; 
 
@@ -44,6 +45,12 @@ public class Usurv {
     public static HashMap<String, Team> playerTeam = new HashMap<>();
     public static HashMap<String, Player> playerByUUID = new HashMap<>();
     public static HashMap<String, Unit> playerLastUnit = new HashMap<>();
+
+    public WprocSync wprocSync = new WprocSync();
+
+    public void addWprocSyncCode(String code) {
+        wprocSync.addCode(code);
+    }
 
  //   public HashMap<String, Tile> givePlayerTile(){
  //       return playerTile;
@@ -95,8 +102,7 @@ public class Usurv {
 
     //create rules for clients
     private static void updateRules(){
-        Timer timer = new Timer();
-        timer.schedule(() -> {
+        Timer.schedule(() -> {
             Rules clientrules = Vars.state.rules;
 
             //ai target change stuff
@@ -119,12 +125,12 @@ public class Usurv {
             Vars.state.rules.buildSpeedMultiplier=0.5f;
             Blocks.coreShard.health=2000000000;
             UnitTypes.alpha.health=0;
-            LExecutor.setMapArea(0,100,999999,999999);
+            //LExecutor.setMapArea(0,100,999999,999999);
             Vars.state.rules.bannedBlocks.add(Blocks.plastaniumCompressor);
             Vars.state.rules.bannedBlocks.add(Blocks.phaseWeaver);
             Vars.state.rules.bannedBlocks.add(Blocks.surgeCrucible);
 
-            Vars.state.rules.blockDamageMultiplier = 0.33;
+            Vars.state.rules.blockDamageMultiplier = 0.33f;
 
             
             //set client side rules
@@ -154,6 +160,8 @@ public class Usurv {
         
         //todo make all players reload properly on map change
         Events.on(WorldLoadEvent.class, event -> {
+
+            wprocSync.init();
             
             try {
                 Thread.sleep(2000);

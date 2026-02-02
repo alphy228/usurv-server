@@ -28,6 +28,7 @@ import mindustry.net.*;
 import mindustry.type.*;
 
 import mindustry.usurv.patches.UsurvPatch;
+import mindustry.usurv.Usurv;
 
 import java.io.*;
 import java.net.*;
@@ -386,6 +387,10 @@ public class ServerControl implements ApplicationListener{
             cancelPlayTask();
             state.set(State.menu);
             info("Stopped server.");
+        });
+
+        handler.register("wprocSyncedCode","[code]", "Runs wproc code for everyone", arg -> {
+            Vars.usurv.addWprocSyncCode(arg[0]);
         });
 
         handler.register("host", "[mapname] [mode]", "Open the server. Will default to survival and a random map if not specified.", arg -> {

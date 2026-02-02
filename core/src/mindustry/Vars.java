@@ -292,6 +292,8 @@ public class Vars implements Loadable{
 
     public static @Nullable Player player;
 
+    public static Usurv usurv = new Usurv();
+
     @Override
     public void loadAsync(){
         loadSettings();
@@ -301,7 +303,6 @@ public class Vars implements Loadable{
     public static void init(){
         Groups.init();
 
-        Usurv usurv = new Usurv();
         usurv.init();
 
         if(loadLocales){

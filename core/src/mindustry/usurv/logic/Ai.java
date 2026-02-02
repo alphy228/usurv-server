@@ -5,7 +5,6 @@ import arc.func.*;
 import arc.math.geom.*;
 import arc.struct.*;
 import arc.util.*;
-import mindustry.annotations.Annotations.*;
 import mindustry.content.*;
 import mindustry.game.*;
 import mindustry.game.Teams.*;
